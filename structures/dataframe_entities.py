@@ -91,13 +91,11 @@ class DataframeEntity(object):
             return cls._get_default_field_value_parser(field)
 
 
-def is_null(value):
+def is_null(value, empty_as_null=False):
     if value is None:
         return True
-    if isinstance(value, (tuple, list, dict)):
-        return False
-    if isinstance(value, (pd.DataFrame, pd.Series)):
-        return False
+    if isinstance(value, (tuple, list, dict, pd.DataFrame, pd.Series)):
+        return empty_as_null and len(value) == 0
     if isinstance(value, DataframeEntity) or type(value).__base__.__name__ == "CollectionClass":
         return False
     return pd.isnull(value)
