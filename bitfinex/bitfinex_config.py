@@ -11,7 +11,7 @@ class BitfinexProperties(object):
 
     @property
     def url_prefix(self):
-        return self._config
+        return self._config["url_prefix"]
 
 
 DEFAULT = BitfinexProperties("bitfinex.properties")

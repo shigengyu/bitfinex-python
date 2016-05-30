@@ -19,6 +19,7 @@ class DataframeEntity(object):
                 value = field.default_value
             if is_null(value) and field.default_value_generator is not None:
                 value = field.default_value_generator(field)
+            value = self._get_field_value_parser(name)(value)
             setattr(self, field.field_name, value)
 
     @classmethod
@@ -140,3 +141,7 @@ class DataframeEntityMetaClass(type):
         base_class_fields = [] if len(bases) == 0 or bases[0] == DataframeEntity else bases[0].fields()
         new_class._ordered_fields = base_class_fields + [field for key, field in ordered_fields]
         return new_class
+
+
+class DataframeEntityBase(DataframeEntity):
+    __metaclass__ = DataframeEntityMetaClass

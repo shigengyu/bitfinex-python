@@ -1,18 +1,22 @@
 from datetime import datetime
 
+from bitfinex.constants import DATETIME_FORMAT_MS
+
+from structures.dataframe_entities import Field, DataframeEntityBase
+
 __author__ = 'Univer'
 
 
-class Ticker(object):
-    def __init__(self, **kwargs):
-        self.mid = kwargs.get("mid")
-        self.bid = kwargs.get("bid")
-        self.ask = kwargs.get("ask")
-        self.last_price = kwargs.get("last_price")
-        self.low = kwargs.get("low")
-        self.high = kwargs.get("high")
-        self.volume = kwargs.get("volume")
-        self.timestamp = datetime.fromtimestamp(self.timestamp)
+class Ticker(DataframeEntityBase):
+    symbol = Field(str)
+    mid = Field(float)
+    big = Field(float)
+    ask = Field(float)
+    last_price = Field(float)
+    low = Field(float)
+    high = Field(float)
+    volume = Field(float)
+    timestamp = Field(datetime, value_parser=lambda x: datetime.fromtimestamp(float(x)))
 
-        if self.timestamp:
-            self.timestamp = datetime.fromtimestamp(self.timestamp)
+    def __repr__(self):
+        return "Ticker %s %.2f @ %s" % (self.symbol, self.mid, self.timestamp.strftime(DATETIME_FORMAT_MS))
