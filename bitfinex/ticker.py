@@ -1,13 +1,12 @@
 from datetime import datetime
 
 from bitfinex.constants import DATETIME_FORMAT_MS
-
-from structures.dataframe_entities import Field, DataframeEntityBase
+from structures.dataframe_entities import Field, DataFrameEntityBase
 
 __author__ = 'Univer'
 
 
-class Ticker(DataframeEntityBase):
+class Ticker(DataFrameEntityBase):
     symbol = Field(str)
     mid = Field(float)
     big = Field(float)
