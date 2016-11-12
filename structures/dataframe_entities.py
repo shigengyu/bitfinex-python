@@ -8,15 +8,15 @@ from copy import copy
 
 import pandas as pd
 
-__author__ = 'Univer'
+__author__ = "Gengyu Shi"
 
 
-class DataFrameEntity(object):
+class _DataFrameEntity(object):
     logger = None
     _ordered_fields = None
 
     def __init__(self, **kwargs):
-        for name, field in {field.name: field for field in self.fields()}.iteritems():
+        for name, field in {field.name: field for field in self.fields()}.items():
             value = kwargs.get(field.field_name, None)
             if _is_null(value) and field.default_value is not None:
                 value = field.default_value
@@ -57,7 +57,7 @@ class DataFrameEntity(object):
             if _is_null(value):
                 return None
 
-            if isinstance(value, basestring) and not issubclass(field.type, basestring) and len(value) == 0:
+            if isinstance(value, (str, unicode)) and not issubclass(field.type, (str, unicode)) and len(value) == 0:
                 return None
 
             if not isinstance(value, field.type):
@@ -67,8 +67,9 @@ class DataFrameEntity(object):
                     try:
                         value = field.type(value)
                     except Exception as e:
-                        cls.logger.error("Failed to convert value [%s] of type [%s] to type [%s] for field [%s] - %s" % (
-                            str(value), type(value), field.type, field.name, e.message))
+                        cls.logger.error(
+                            "Failed to convert value [%s] of type [%s] to type [%s] for field [%s] - %s" % (
+                                str(value), type(value), field.type, field.name, e.message))
                         raise
             return value
 
@@ -100,7 +101,7 @@ def _is_null(value, empty_as_null=False):
         return True
     if isinstance(value, (tuple, list, dict, pd.DataFrame, pd.Series)):
         return empty_as_null and len(value) == 0
-    if isinstance(value, DataFrameEntity) or type(value).__base__.__name__ == "CollectionClass":
+    if isinstance(value, _DataFrameEntity) or type(value).__base__.__name__ == "CollectionClass":
         return False
     return pd.isnull(value)
 
@@ -141,12 +142,12 @@ class DataframeEntityMetaClass(type):
             if field.name is None:
                 field.name = name
 
-        base_class_fields = [] if len(bases) == 0 or bases[0] == DataFrameEntity else bases[0].fields()
+        base_class_fields = [] if len(bases) == 0 or bases[0] == _DataFrameEntity else bases[0].fields()
         new_class._ordered_fields = base_class_fields + [field for key, field in ordered_fields]
         return new_class
 
 
-class DataFrameEntityBase(DataFrameEntity):
+class DataFrameEntity(_DataFrameEntity):
     __metaclass__ = DataframeEntityMetaClass
 
 
@@ -160,7 +161,7 @@ def collection(base_class):
         def __init__(self, dataframe=None, include_transient=False):
             if isinstance(dataframe, CollectionClass):
                 dataframe = dataframe.dataframe
-            self.dataframe = dataframe if dataframe is not None else self._get_empty_dataframe(include_transient)
+            self.dataframe = dataframe if dataframe is not None else self.get_empty_dataframe(include_transient)
 
         def __iter__(self):
             for _, x in self.dataframe.iterrows():
@@ -210,11 +211,12 @@ def collection(base_class):
                                          code)
                             logger.error(traceback.format_exc())
 
-                    logger.warn("DataFrame does not contain all columns defined in [%s]. Missing columns = [%s]. " + details,
-                                self.base_class.__name__,
-                                ", ".join(missing_columns))
+                    logger.warn(
+                        "DataFrame does not contain all columns defined in [%s]. Missing columns = [%s]. " + details,
+                        self.base_class.__name__,
+                        ", ".join(missing_columns))
                 wrapped = self.__class__(obj)
-                wrapped.__dict__.update({key: value for key, value in self.__dict__.iteritems() if key != "dataframe"})
+                wrapped.__dict__.update({key: value for key, value in self.__dict__.items() if key != "dataframe"})
                 return wrapped
             elif hasattr(obj, "__call__"):
                 def func(*args, **kwargs):
@@ -225,8 +227,9 @@ def collection(base_class):
             return obj
 
         @classmethod
-        def _get_empty_dataframe(cls, include_transient):
-            df = pd.DataFrame(columns=[field.name for field in cls.base_class.fields() if include_transient or not field.is_transient])
+        def get_empty_dataframe(cls, include_transient):
+            df = pd.DataFrame(columns=[field.name for field in cls.base_class.fields() if
+                                       include_transient or not field.is_transient])
             return df
 
         @classmethod

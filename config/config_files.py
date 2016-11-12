@@ -1,6 +1,6 @@
 import os
 
-__author__ = 'Univer'
+__author__ = "Gengyu Shi"
 
 
 def get_config_file_path(*args):

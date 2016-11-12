@@ -7,7 +7,7 @@ from configobj import ConfigObj
 
 from config.config_files import get_config_file_path
 
-__author__ = 'Univer'
+__author__ = "Gengyu Shi"
 
 
 class Crypto(object):

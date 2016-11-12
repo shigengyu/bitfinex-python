@@ -2,7 +2,7 @@ from configobj import ConfigObj
 
 from config import config_files
 
-__author__ = 'Univer'
+__author__ = "Gengyu Shi"
 
 
 class BitfinexProperties(object):

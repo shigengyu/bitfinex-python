@@ -1,6 +1,6 @@
-from structures.dataframe_entities import DataFrameEntity, Field, collection
+from structures.dataframe_entities import Field, collection, DataFrameEntity
 
-__author__ = 'Univer'
+__author__ = "Gengyu Shi"
 
 
 class DummyModel(DataFrameEntity):
@@ -13,4 +13,5 @@ class DummyModelCollection(collection(DummyModel)):
 
 
 class TestDataFrameEntities(object):
-    pass
+    def test_get_empty_data_frame(self):
+        DummyModelCollection.get_empty_data_frame()

@@ -3,7 +3,7 @@ import unittest
 from bitfinex.crypto import load_keys
 from tests.test_data import get_test_data_path
 
-__author__ = 'Univer'
+__author__ = "Gengyu Shi"
 
 
 class TestAuthentication(unittest.TestCase):
