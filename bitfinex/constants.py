@@ -1,6 +1,6 @@
 from enum import Enum
 
-__author__ = 'Univer'
+__author__ = 'Gengyu Shi'
 
 
 class Symbols(Enum):

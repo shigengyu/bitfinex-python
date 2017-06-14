@@ -1,6 +1,6 @@
 from datetime import datetime
 
-__author__ = 'Univer'
+__author__ = 'Gengyu Shi'
 
 
 class Ticker(object):

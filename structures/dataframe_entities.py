@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 import pandas as pd
 
-__author__ = 'Univer'
+__author__ = 'Gengyu Shi'
 
 
 class DataframeEntity(object):
